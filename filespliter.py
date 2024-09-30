@@ -1,11 +1,8 @@
-from google.colab import drive
 import os
 import shutil
 
-drive.mount('/content/drive')
-
 source_dir = '/content/drive/MyDrive/I2T Recognition Dataset/ships_images'
-destination_dirs = [
+filesplit_dirs = [
     '/content/drive/MyDrive/I2T Recognition Dataset/ships_images/1',
     '/content/drive/MyDrive/I2T Recognition Dataset/ships_images/2',
     '/content/drive/MyDrive/I2T Recognition Dataset/ships_images/3',
@@ -13,16 +10,18 @@ destination_dirs = [
     '/content/drive/MyDrive/I2T Recognition Dataset/ships_images/5'
 ]
 
-for dir in destination_dirs:
+for dir in filesplit_dirs: 
     os.makedirs(dir, exist_ok=True)
+image_files = os.listdir(source_dir)
 
-image_files = [f for f in os.listdir(source_dir) if f.endswith(('.png', '.jpg', '.jpeg'))]
-num_dirs = len(destination_dirs)
+dir_num = 0
 
-for i, image_file in enumerate(image_files):
-    src_path = os.path.join(source_dir, image_file)
-    dest_dir = destination_dirs[i % num_dirs] 
-    dest_path = os.path.join(dest_dir, image_file)
-    shutil.move(src_path, dest_path)
-    print(f'Moved {image_file} to {dest_dir}')
-
+for image_file in image_files:
+    if image_file.endswith(('.png', '.jpg', '.jpeg')):
+        src_path = os.path.join(source_dir, image_file)
+        detect_dir = filesplit_dirs[dir_num]
+        file_path = os.path.join(detect_dir, image_file)
+        shutil.move(src_path, file_path)
+        dir_num += 1
+        if dir_num >= len(filesplit_dirs):
+            dir_num = 0
